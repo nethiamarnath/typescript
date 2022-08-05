@@ -4,34 +4,23 @@ class validate {
     constructor() { }
     school_data(user) {
         const school_data = Joi.object({
-            scl_name: Joi.string()
-                .min(4)
-                .required(),
-            estb_year: Joi.number()
-                .required(),
-            no_of_employees: Joi.number()
-                .required()
+            scl_name: Joi.string().min(4).required(),
+            estb_year: Joi.number().required(),
+            no_of_employees: Joi.number().required()
         }).options({ abortEarly: false });
         return school_data.validateAsync(user);
     }
     class_data(user) {
         const class_data = Joi.object({
-            cls_name: Joi.string()
-                .min(5)
-                .max(20)
-                .required(),
-            no_of_students: Joi.number()
-                .required(),
+            cls_name: Joi.string().min(5).max(20).required(),
+            no_of_students: Joi.number().required(),
         }).options({ abortEarly: false });
         return class_data.validateAsync(user);
     }
     students_data(user) {
         const students_data = Joi.object({
-            std_name: Joi.string()
-                .required(),
-            cls_id: Joi.number()
-                .min(1)
-                .required(),
+            std_name: Joi.string().required(),
+            cls_id: Joi.number().min(1).required(),
             scl_id: Joi.number()
                 .min(1)
                 .required(),

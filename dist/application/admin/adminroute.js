@@ -5,11 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 const Admin_controller = require("./adminController");
+const adminValidator_1 = __importDefault(require("./adminValidator"));
+const validatorResponse_1 = __importDefault(require("../../helper/validatorResponse"));
 // router.get('/getDetails', Admin_controller.displayemployeeData)
 // router.post('/loginDetails', Admin_controller.employeeLogindetails)
 // router.post('/generate_acc', Admin_controller.generate_acc_token)
 // router.put('/updatedetails', Admin_controller.update_name)
-router.post("/school", Admin_controller.school_data);
+router.post("/school", (0, validatorResponse_1.default)(adminValidator_1.default.school_data), Admin_controller.school_data);
 router.post('/class', Admin_controller.class_data);
 router.post('/students', Admin_controller.students_data);
 router.post('/std_exam', Admin_controller.std_exam_data);
