@@ -1,32 +1,28 @@
-import { string } from 'joi';
-import jwt from 'jsonwebtoken';
-import token_config = require('../types/tokenconfig')
-import jwt_gene = require('../config/jwt_config')
+import jwt = require('jsonwebtoken')
+import configkeys = require('../types/tokenconfig')
 
 
-class token_verification {
-  constructor() { }
-  verify_Token = async function (st: string) {
-    const decode = jwt.verify(st, token_config.app.acc_secret);
-    return decode
-  }
-  check_Rtoken = async function (data: any) {
-    try {
-      const decode: any = jwt.verify(data.refresh_token, token_config.app.ref_secret);
-      if (decode) {
-        const aToken = await jwt_gene.generate_Token(decode.email)
-        return aToken
-      }
+const verify_token = async function (req: any, res: any, next: any) {
+  try {
+    const token: string = req.headers.access_token
+    let key = <Secret>configkeys.app.acc_secret;
+    const userdata: any = jwt.verify(token, key)
+    type tokenCheck = {
+      UserId: number,
+      access_token: string
     }
-    catch (Error: any) {
-      if (Error.name === 'JsonWebTokenError') {
-        return ({ error: 'invalid token' });
-      } else if (Error.name === "TokenExpiredError") {
-        return ("TokenExpired")
-      } else {
-        console.log("error")
-      }
+    const tokendetails: tokenCheck = {
+      UserId: userdata.UserId,
+      access_token: token
+    }
+    next()
+  } catch (Error: any) {
+    if (Error.name === "TokenExpiredError") {
+      res.status(440).send({ 'message': 'Token access expired' })
+    }
+    else if (Error.name === "JsonWebTokenError") {
+      res.status(441).send({ "Message": 'Invalid access token' })
     }
   }
 }
-export = new token_verification
+export = verify_token

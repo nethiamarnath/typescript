@@ -8,42 +8,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+const jwt = require("jsonwebtoken");
+const configkeys = require("../types/tokenconfig");
+const verify_token = function (req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const token = req.headers.access_token;
+            let key = configkeys.app.acc_secret;
+            const userdata = jwt.verify(token, key);
+            const tokendetails = {
+                UserId: userdata.UserId,
+                access_token: token
+            };
+            next();
+        }
+        catch (Error) {
+            if (Error.name === "TokenExpiredError") {
+                res.status(440).send({ 'message': 'Token access expired' });
+            }
+            else if (Error.name === "JsonWebTokenError") {
+                res.status(441).send({ "Message": 'Invalid access token' });
+            }
+        }
+    });
 };
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const token_config = require("../types/tokenconfig");
-const jwt_gene = require("../config/jwt_config");
-class token_verification {
-    constructor() {
-        this.verify_Token = function (st) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const decode = jsonwebtoken_1.default.verify(st, token_config.app.acc_secret);
-                return decode;
-            });
-        };
-        this.check_Rtoken = function (data) {
-            return __awaiter(this, void 0, void 0, function* () {
-                try {
-                    const decode = jsonwebtoken_1.default.verify(data.refresh_token, token_config.app.ref_secret);
-                    if (decode) {
-                        const aToken = yield jwt_gene.generate_Token(decode.email);
-                        return aToken;
-                    }
-                }
-                catch (Error) {
-                    if (Error.name === 'JsonWebTokenError') {
-                        return ({ error: 'invalid token' });
-                    }
-                    else if (Error.name === "TokenExpiredError") {
-                        return ("TokenExpired");
-                    }
-                    else {
-                        console.log("error");
-                    }
-                }
-            });
-        };
-    }
-}
-module.exports = new token_verification;
+module.exports = verify_token;

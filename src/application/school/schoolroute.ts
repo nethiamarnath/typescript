@@ -11,13 +11,4 @@ router.delete('/:scl_id', validator(schema.school_delete), schoolController.scho
 
 
 
-
-///school
-// post school/ save
-// get school?page=1&offset=10  list of schools.
-// put school/{:shoolID} student details.
-// delete school/{:shoolID}
-
-
-
 export = router;

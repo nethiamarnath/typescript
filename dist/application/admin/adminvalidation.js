@@ -21,11 +21,8 @@ class validate {
         const students_data = Joi.object({
             std_name: Joi.string().required(),
             cls_id: Joi.number().min(1).required(),
-            scl_id: Joi.number()
-                .min(1)
-                .required(),
-            status: Joi.boolean()
-                .required(),
+            scl_id: Joi.number.min(1).required(),
+            status: Joi.boolean().required(),
             dob: Joi.date().iso().messages({ 'date.format': `Date format is YYYY-MM-DD` }).required(),
         }).options({ abortEarly: false });
         return students_data.validateAsync(user);
@@ -78,9 +75,7 @@ class validate {
                 .min(5)
                 .max(50)
                 .required(),
-            password: Joi.string()
-                .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$/)
-                .required()
+            password: Joi.string().regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$/).required()
         }).options({ abortEarly: false });
         return JoiLogin.validateAsync(user);
     }

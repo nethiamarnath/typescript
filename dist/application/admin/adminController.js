@@ -20,14 +20,8 @@ class adminController {
                     estb_year: body.estb_year,
                     no_of_employees: body.no_of_employees
                 };
-                // const flag: boolean = validation.school_data(data)
-                // if (!flag) {
-                //   res.status(400).send("please check the input data")
-                // }
-                // else {
                 const result = yield adminrepo.school_data(data);
                 res.status(200).send("data inserted successfuly");
-                // }
             });
         };
         this.class_data = function (req, res) {
